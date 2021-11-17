@@ -1,8 +1,5 @@
 # folltone_zone_safe
-![GitHub language count](https://img.shields.io/github/languages/count/foltone/folltone_zone_safe?color=blue&label=Langages&logo=github&logoColor=blue&style=for-the-badge)
-![GitHub top language](https://img.shields.io/github/languages/top/foltone/folltone_zone_safe?color=%232C2D72&logo=lua&logoColor=%232C2D72&style=for-the-badge)
 
----
 ## Description
 Voici un script zone safe, avec marker et blip, optimisé à 0.00ms.
 
