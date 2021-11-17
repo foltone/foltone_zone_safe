@@ -15,6 +15,8 @@ Voici un script zone safe, avec marker et blip, optimisé à 0.00ms.
 ### Vidéo
 https://youtu.be/R1hPkNakpkU
 
+### Discord
+https://discord.gg/X9ReemrhKh
 
 ---
 
