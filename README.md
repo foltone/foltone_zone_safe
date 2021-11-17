@@ -16,7 +16,7 @@ Voici un script zone safe, avec marker et blip, optimisé à 0.00ms.
 ``ensure folltone_zone_safe``
 
 ### Vidéo
-https://youtu.be/2l7kiOlXTWI
+https://youtu.be/R1hPkNakpkU
 
 
 ---
