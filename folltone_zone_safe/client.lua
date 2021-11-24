@@ -79,6 +79,7 @@ end)
             interval = 0
             SetEntityInvincible(player,true)
             DisableControlAction(2, 37, true) -- désactiver la roue des armes (TAB), quand dans la zone safe
+            DisableControlAction(0, 140, true) -- désactiver (R), quand dans la zone safe
             DisablePlayerFiring(player, true) -- Désactive le tir d'une manière ou d'une autre, quand dans la zone safe
             DisableControlAction(0, 106, true) -- Désactiver les commandes de la souris, quand dans la zone safe
             if IsDisabledControlJustPressed(2, 37) then
