@@ -26,6 +26,7 @@ Citizen.CreateThread(function()
     while true do
         wait = 500
         for k, v in pairs(Config.zones) do
+            -- print(wait)
             local plyCoords = GetEntityCoords(GetPlayerPed(-1), false)
             local pos = Config.zones
             local dist = Vdist(plyCoords.x, plyCoords.y, plyCoords.z, v.x, v.y, v.z)
@@ -37,6 +38,10 @@ Citizen.CreateThread(function()
                     SetCurrentPedWeapon(player, GetHashKey("WEAPON_UNARMED"), true)
                     notifIn = true
                     notifOut = false
+                    if Config.marker then
+                        --Le -1.0667 est pour que le marker ce place au ras du sol | 3.0667 = hauteur | 46, 255, 0,= couleur rgba | 155 = opacité
+                        DrawMarker(1, v.x, v.y, v.z - 1.0667, 0, 0, 0, 0, 0, 0, v.c * 2 - 1, v.c * 2.0 - 1, 3.0667, 46, 255, 0, 155, 0, 0, 2, 0, 0, 0, 0)
+                    end
                 end
             else
                 if not notifOut then
@@ -44,14 +49,16 @@ Citizen.CreateThread(function()
                     notifOut = true
                     notifIn = false
                 end
-            end
-            if Config.marker then
-                -- 20 = distance a la quelle s'affiche le marker
-                if dist <= v.c + 20 then
-                    --Le -1.0667 est pour que le marker ce place au ras du sol | 3.0667 = hauteur | 46, 255, 0,= couleur rgba | 155 = opacité
-                    DrawMarker(1, v.x, v.y, v.z - 1.0667, 0, 0, 0, 0, 0, 0, v.c * 2 - 1, v.c * 2.0 - 1, 3.0667, 46, 255, 0, 155, 0, 0, 2, 0, 0, 0, 0)
+                if Config.marker then
+                    -- 20 = distance a la quelle s'affiche le marker
+                    if dist <= v.c + 20 then
+                        wait = 0
+                        --Le -1.0667 est pour que le marker ce place au ras du sol | 3.0667 = hauteur | 46, 255, 0,= couleur rgba | 155 = opacité
+                        DrawMarker(1, v.x, v.y, v.z - 1.0667, 0, 0, 0, 0, 0, 0, v.c * 2 - 1, v.c * 2.0 - 1, 3.0667, 46, 255, 0, 155, 0, 0, 2, 0, 0, 0, 0)
+                    end
                 end
             end
+            
             if notifIn then
                 SetEntityInvincible(player,true)
                 DisableControlAction(2, 37, true) -- désactiver la roue des armes (TAB), quand dans la zone safe
