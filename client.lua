@@ -1,15 +1,3 @@
-ESX = nil
-local PlayerData = {}
-
-Citizen.CreateThread(function()
-    while ESX == nil do
-        TriggerEvent('esx:getSharedObject', function(obj)
-            ESX = obj
-        end)
-        Citizen.Wait(0)
-    end
-end)
-
 Citizen.CreateThread(function()
     local player = GetPlayerPed(-1)
     local notifIn = false
@@ -68,20 +56,19 @@ Citizen.CreateThread(function()
                 if IsDisabledControlJustPressed(2, 37) then
                     --si TAB est enfoncé, envoyer un message
                     SetCurrentPedWeapon(player, GetHashKey("WEAPON_UNARMED"), true)
-                    ESX.ShowNotification('~r~Vous ne pouvez pas sortir d\'arme dans la zone safe.')
+                    BeginTextCommandThefeedPost('STRING')
+                    AddTextComponentSubstringPlayerName('~r~Vous ne pouvez pas sortir d\'arme dans la zone safe.')
+                    EndTextCommandThefeedPostTicker(0, 1)
                 end
                 if IsDisabledControlJustPressed(0, 106) then
                     --si clic gauche est enfoncé, envoyer un message
                     SetCurrentPedWeapon(player, GetHashKey("WEAPON_UNARMED"), true)
-                    ESX.ShowNotification('~r~Vous ne pouvez pas frapper dans la zone safe.')
+                    BeginTextCommandThefeedPost('STRING')
+                    AddTextComponentSubstringPlayerName('~r~Vous ne pouvez pas frapper dans la zone safe.')
+                    EndTextCommandThefeedPostTicker(0, 1)
                 end
             end
         end
         Citizen.Wait(wait) -- Ne pas toucher
-    end
-    if notifIn then
-        ESX.ShowNotification('~r~Vous ne pouvez pas sortir d\'arme dans la zone safe.')
-    else
-        ESX.ShowNotification('~g~Vous pouvez sortir d\'arme dans la zone safe.')
     end
 end)
