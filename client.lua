@@ -51,64 +51,62 @@ Citizen.CreateThread(function()
 end)
 
     while true do
-        local closestZone = getClosestCoords(Config.zones)
-        --print('closestZone', closestZone)
-        local circonference = Config.zones[closestZone].c
-        local x, y, z = table.unpack(GetEntityCoords(player, true))
-        local dist = Vdist(Config.zones[closestZone].x, Config.zones[closestZone].y, Config.zones[closestZone].z, x, y, z)
+        if Config.zones then
+            local closestZone = getClosestCoords(Config.zones)
+            local circonference = Config.zones[closestZone].c
+            local x, y, z = table.unpack(GetEntityCoords(player, true))
+            local dist = Vdist(Config.zones[closestZone].x, Config.zones[closestZone].y, Config.zones[closestZone].z, x, y, z)
 
-        if dist <= circonference then
-            if not notifIn then
-                NetworkSetFriendlyFireOption(false)
-                ClearPlayerWantedLevel(PlayerId())
-                SetCurrentPedWeapon(player, GetHashKey("WEAPON_UNARMED"), true)
-                ESX.ShowNotification('~g~Vous êtes dans une zone safe')
-                notifIn = true
-                notifOut = false
+            if dist <= circonference then
+                if not notifIn then
+                    NetworkSetFriendlyFireOption(false)
+                    ClearPlayerWantedLevel(PlayerId())
+                    SetCurrentPedWeapon(player, GetHashKey("WEAPON_UNARMED"), true)
+                    ESX.ShowNotification('~g~Vous êtes dans une zone safe')
+                    notifIn = true
+                    notifOut = false
+                end
+            else
+                if not notifOut then
+                    NetworkSetFriendlyFireOption(true)
+                    ESX.ShowNotification('~r~Vous êtes sorti de la zone safe') -- si entrer dans la zone safe, envoyer un message
+                    notifOut = true
+                    notifIn = false
+                end
             end
-        else
-            if not notifOut then
-                --print('entrer')
-                NetworkSetFriendlyFireOption(true)
-                ESX.ShowNotification('~r~Vous êtes sorti de la zone safe') -- si entrer dans la zone safe, envoyer un message
-                notifOut = true
-                notifIn = false
-            end
-        end
-        if notifIn then
-            interval = 0
-            SetEntityInvincible(player,true)
-            DisableControlAction(2, 37, true) -- désactiver la roue des armes (TAB), quand dans la zone safe
-            DisableControlAction(0, 140, true) -- désactiver (R), quand dans la zone safe
-            DisablePlayerFiring(player, true) -- Désactive le tir d'une manière ou d'une autre, quand dans la zone safe
-            DisableControlAction(0, 106, true) -- Désactiver les commandes de la souris, quand dans la zone safe
-            if IsDisabledControlJustPressed(2, 37) then
-                --si TAB est enfoncé, envoyer un message
-                SetCurrentPedWeapon(player, GetHashKey("WEAPON_UNARMED"), true)
-                ESX.ShowNotification('~r~Vous ne pouvez pas sortir d\'arme dans la zone safe.')
+            if notifIn then
+                interval = 0
+                SetEntityInvincible(player,true)
+                DisableControlAction(2, 37, true) -- désactiver la roue des armes (TAB), quand dans la zone safe
+                DisableControlAction(0, 140, true) -- désactiver (R), quand dans la zone safe
+                DisablePlayerFiring(player, true) -- Désactive le tir d'une manière ou d'une autre, quand dans la zone safe
+                DisableControlAction(0, 106, true) -- Désactiver les commandes de la souris, quand dans la zone safe
+                if IsDisabledControlJustPressed(2, 37) then
+                    --si TAB est enfoncé, envoyer un message
+                    SetCurrentPedWeapon(player, GetHashKey("WEAPON_UNARMED"), true)
+                    ESX.ShowNotification('~r~Vous ne pouvez pas sortir d\'arme dans la zone safe.')
 
-            end
-            if IsDisabledControlJustPressed(0, 106) then
-                --si clic gauche est enfoncé, envoyer un message
-                SetCurrentPedWeapon(player, GetHashKey("WEAPON_UNARMED"), true)
-                ESX.ShowNotification('~r~Vous ne pouvez pas frapper dans la zone safe.')
+                end
+                if IsDisabledControlJustPressed(0, 106) then
+                    --si clic gauche est enfoncé, envoyer un message
+                    SetCurrentPedWeapon(player, GetHashKey("WEAPON_UNARMED"), true)
+                    ESX.ShowNotification('~r~Vous ne pouvez pas frapper dans la zone safe.')
 
+                end
+            else
+                interval = 1000 -- Ne pas toucher
             end
-        else
-            interval = 1000 -- Ne pas toucher
-        end
-        if dist <= circonference + 20 then
-            -- 20 = distance a la quelle s'affiche le marker
-            interval = 0
-            if Config.marker then
-                if DoesEntityExist(player) then
-                    --Le -1.0667 est pour que le marker ce place au ras du sol | 3.0667 = hauteur | 46, 255, 0,= couleur rgba | 155 = opacité
-                    DrawMarker(1, Config.zones[closestZone].x, Config.zones[closestZone].y, Config.zones[closestZone].z - 1.0667, 0, 0, 0, 0, 0, 0, circonference * 2 - 1, circonference * 2.0 - 1, 3.0667, 46, 255, 0, 155, 0, 0, 2, 0, 0, 0, 0)
+            if dist <= circonference + 20 then
+                -- 20 = distance a la quelle s'affiche le marker
+                interval = 0
+                if Config.marker then
+                    if DoesEntityExist(player) then
+                        --Le -1.0667 est pour que le marker ce place au ras du sol | 3.0667 = hauteur | 46, 255, 0,= couleur rgba | 155 = opacité
+                        DrawMarker(1, Config.zones[closestZone].x, Config.zones[closestZone].y, Config.zones[closestZone].z - 1.0667, 0, 0, 0, 0, 0, 0, circonference * 2 - 1, circonference * 2.0 - 1, 3.0667, 46, 255, 0, 155, 0, 0, 2, 0, 0, 0, 0)
+                    end
                 end
             end
         end
-        --end
-        --print("interval -> ", interval)
         Citizen.Wait(interval) -- Ne pas toucher antie crash
     end
 end)
